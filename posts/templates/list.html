@@ -5,14 +5,24 @@
 	<title>Post List</title>
 </head>
 <body>
+	
+	{% if messages %}
+	<ul class="messages">
+	    {% for message in messages %}
+	    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+	    {% endfor %}
+	</ul>
+	{% endif %}
+	
 	<h1>List</h1>
+	
 	{% for item in list %}
 	<ul>
-		<a href="{{item.get_absolute_url}}"><li>{{item.title}}</li></a>
-		<li>{{item.content}}</li>
-		<li>{{item.id}}</li>
+		<a href="{{item.get_absolute_url}}"><li>id: {{item.id}}</li></a>
+		<li>name: {{item.title}}</li>
+		<li>content: {{item.content}}</li>
+		
 	</ul>
 	{% endfor %}
-	
 </body>
 </html>
