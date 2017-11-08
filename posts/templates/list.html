@@ -1,28 +1,21 @@
-<!DOCTYPE html>
-<html lang='en'>
-<head>
-	<meta charset='UTF-8'>
-	<title>Post List</title>
-</head>
-<body>
-	
-	{% if messages %}
-	<ul class="messages">
-	    {% for message in messages %}
-	    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-	    {% endfor %}
-	</ul>
-	{% endif %}
-	
+{% extends "base.html" %}
+
+{% block heading %} 
+List
+{% endblock heading %}
+
+{% block content %}	
 	<h1>List</h1>
-	
+
+	<a href="{% url 'posts:create' %}"><button>Create</button></a>
+
 	{% for item in list %}
 	<ul>
 		<a href="{{item.get_absolute_url}}"><li>id: {{item.id}}</li></a>
 		<li>name: {{item.title}}</li>
 		<li>content: {{item.content}}</li>
-		
+		<a href="{% url 'posts:update' post_id=item.id %}"><button>Update</button></a>
+		<a href="{% url 'posts:delete' post_id=item.id %}"><button>Delete</button></a>
 	</ul>
 	{% endfor %}
-</body>
-</html>
+{% endblock content %}
