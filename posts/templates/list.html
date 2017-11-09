@@ -14,8 +14,8 @@ List
 		<a href="{{item.get_absolute_url}}"><li>id: {{item.id}}</li></a>
 		<li>name: {{item.title}}</li>
 		<li>content: {{item.content}}</li>
-		<a href="{% url 'posts:update' post_id=item.id %}"><button>Update</button></a>
-		<a href="{% url 'posts:delete' post_id=item.id %}"><button>Delete</button></a>
+		<a href="{% url 'posts:update' post_id=item.id %}"><button class="btn btn-info">Update</button></a>
+		<a href="{% url 'posts:delete' post_id=item.id %}"><button class="btn btn-danger">Delete</button></a>
 	</ul>
 	{% endfor %}
 {% endblock content %}
