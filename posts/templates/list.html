@@ -16,6 +16,9 @@ List
 <div class="row">
 {% for item in list %}
 	<div class="card" style="width: 20rem;">
+		{% if item.img %}
+			<img class="card-img-top" src="{{item.img.url}}" alt="Card image cap">
+		{% endif %}	
   		<div class="card-body">
     		<h4 class="card-title">{{item.title}} <small>{{item.updated}}</small></h4>
    			<p class="card-text">{{item.content}}</p>

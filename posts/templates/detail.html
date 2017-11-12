@@ -10,5 +10,8 @@ Detail
 		<li>{{item.title}}</li>
 		<li>{{item.content}}</li>
 		<li>{{item.id}}</li>
+		{% if item.img %}
+			<img class="img-fluid" src="{{item.img.url}}" alt="Card image cap">
+		{% endif %}	
 	</ul>
 {% endblock content %}

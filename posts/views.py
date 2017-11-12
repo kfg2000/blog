@@ -51,7 +51,7 @@ def post_detail(request, post_id):
     return render(request, 'detail.html', context)
 
 def post_create(request):
-    form = PostForm(request.POST or None)
+    form = PostForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
         messages.success(request, "Awesome, you added a post :)")
@@ -63,7 +63,7 @@ def post_create(request):
 
 def post_update(request, post_id):
     item = Post.objects.get(id=post_id)
-    form = PostForm(request.POST or None, instance=item)
+    form = PostForm(request.POST or None, request.FILES or None, instance=item)
     if form.is_valid():
         form.save()
         messages.info(request, "Updated")
