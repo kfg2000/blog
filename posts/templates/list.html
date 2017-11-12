@@ -5,17 +5,40 @@ List
 {% endblock heading %}
 
 {% block content %}	
-	<h1>List</h1>
+<div class="jumbotron">
+  <h1 class="display-3">List!</h1>
+  <p class="lead">These are my posts! Do you want to create one?</p>
+  <p class="lead">
+    <a class="btn btn-primary btn-lg" href="{% url 'posts:create' %}" role="button">Create</a>
+  </p>
+</div>
 
-	<a href="{% url 'posts:create' %}"><button>Create</button></a>
+<div class="row">
+{% for item in list %}
+	<div class="card" style="width: 20rem;">
+  		<div class="card-body">
+    		<h4 class="card-title">{{item.title}} <small>{{item.updated}}</small></h4>
+   			<p class="card-text">{{item.content}}</p>
+   			<a href="{% url 'posts:detail' post_id=item.id %}" class="btn btn-info">Detail</a>
+   			<a href="{% url 'posts:update' post_id=item.id %}" class="btn btn-warning">Update</a>
+    		<a href="{% url 'posts:delete' post_id=item.id %}" class="btn btn-danger">Delete</a>
+  		</div>
+	</div>
+{% endfor %}
+</div>
+<div class="pagination">
+    <span class="step-links">
+        {% if list.has_previous %}
+            <a href="?page={{ list.previous_page_number }}">previous</a>
+        {% endif %}
 
-	{% for item in list %}
-	<ul>
-		<a href="{{item.get_absolute_url}}"><li>id: {{item.id}}</li></a>
-		<li>name: {{item.title}}</li>
-		<li>content: {{item.content}}</li>
-		<a href="{% url 'posts:update' post_id=item.id %}"><button class="btn btn-info">Update</button></a>
-		<a href="{% url 'posts:delete' post_id=item.id %}"><button class="btn btn-danger">Delete</button></a>
-	</ul>
-	{% endfor %}
+        <span class="current">
+            Page {{ list.number }} of {{ list.paginator.num_pages }}.
+        </span>
+
+        {% if list.has_next %}
+            <a href="?page={{ list.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
 {% endblock content %}
