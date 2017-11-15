@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% load share %}
+
+{% load  %}
+
 {% block heading %} 
 Detail
 {% endblock heading %}
@@ -13,5 +17,14 @@ Detail
 		{% if item.img %}
 			<img class="img-fluid" src="{{item.img.url}}" alt="Card image cap">
 		{% endif %}	
+		<a href="https://www.facebook.com/sharer/sharer.php?u={{request.build_absolute_uri}}" class="btn btn-primary">
+			<i class="fa fa-facebook" aria-hidden="true"></i>
+		</a>
+		<a href="https://twitter.com/home?status={{item.content|truncatechars:140|share}}%20{{request.build_absolute_uri}}" class="btn btn-primary">
+			<i class="fa fa-twitter" aria-hidden="true"></i>
+		</a>
+		<a href="https://www.linkedin.com/shareArticle?mini=true&url={{request.build_absolute_uri}}&title={{item.title|share}}&summary={{item.content|share}}&{{request.build_absolute_uri}}" class="btn btn-primary">
+			<i class="fa fa-linkedin" aria-hidden="true"></i>
+		</a>
 	</ul>
 {% endblock content %}

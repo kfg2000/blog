@@ -4,7 +4,7 @@
 List
 {% endblock heading %}
 
-{% block content %}	
+{% block content %} 
 <div class="jumbotron">
   <h1 class="display-3">List!</h1>
   <p class="lead">These are my posts! Do you want to create one?</p>
@@ -22,9 +22,9 @@ List
   		<div class="card-body">
     		<h4 class="card-title">{{item.title}} <small>{{item.updated}}</small></h4>
    			<p class="card-text">{{item.content}}</p>
-   			<a href="{% url 'posts:detail' post_id=item.id %}" class="btn btn-info">Detail</a>
-   			<a href="{% url 'posts:update' post_id=item.id %}" class="btn btn-warning">Update</a>
-    		<a href="{% url 'posts:delete' post_id=item.id %}" class="btn btn-danger">Delete</a>
+   			<a href="{% url 'posts:detail' post_slug=item.slug %}" class="btn btn-info">Detail</a>
+   			<a href="{% url 'posts:update' post_slug=item.slug %}" class="btn btn-warning">Update</a>
+    		<a href="{% url 'posts:delete' post_slug=item.slug %}" class="btn btn-danger">Delete</a>
   		</div>
 	</div>
 {% endfor %}
