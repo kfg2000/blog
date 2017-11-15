@@ -4,7 +4,7 @@ from .forms import PostForm
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from urllib.parse import quote 
-
+from django.http import Http404
 
 def post_home(request):
     context = {
@@ -53,6 +53,8 @@ def post_detail(request, post_slug):
     return render(request, 'detail.html', context)
 
 def post_create(request):
+    if not request.user.is_staff:
+        raise Http404
     form = PostForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
@@ -64,6 +66,8 @@ def post_create(request):
     return render(request, 'post_create.html', context)
 
 def post_update(request, post_slug):
+    if not request.user.is_staff:
+        raise Http404
     item = Post.objects.get(slug=post_slug)
     form = PostForm(request.POST or None, request.FILES or None, instance=item)
     if form.is_valid():
@@ -77,6 +81,8 @@ def post_update(request, post_slug):
     return render(request, 'post_update.html', context)
 
 def post_delete(request, post_slug):
+    if not request.user.is_staff:
+        raise Http404
     Post.objects.get(slug=post_slug).delete()
     messages.warning(request, "You sure?")
     return redirect("posts:list")
