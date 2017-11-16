@@ -6,6 +6,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from urllib.parse import quote 
 from django.http import Http404
 from django.utils import timezone 
+from django.db.models import Q
 
 def post_home(request):
     context = {
@@ -32,6 +33,15 @@ def post_list(request):
     objects = Post.objects.filter(draft=False, publish_date__lte=today)
     if request.user.is_staff:
         objects = Post.objects.all()
+
+    query = request.GET.get("q")
+    if query:
+        objects = objects.filter(
+            Q(title__icontains=query)|
+            Q(content__icontains=query)|
+            Q(author__first_name__icontains=query)|
+            Q(author__last_name__icontains=query)
+            ).distinct()
 
     paginator = Paginator(objects, 3) # Show 3 objects per page
 

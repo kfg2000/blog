@@ -11,7 +11,12 @@ List
   <p class="lead">
     <a class="btn btn-primary btn-lg" href="{% url 'posts:create' %}" role="button">Create</a>
   </p>
+  <form action="" method="GET">
+    <input type="text" name='q' placeholder="Search..." value="{{request.GET.q}}">
+    <input class="btn btn-primary" type="submit" value="Search">
+</form>
 </div>
+
 
 <div class="row">
 {% for item in list %}
@@ -37,12 +42,14 @@ List
     		<a href="{% url 'posts:delete' post_slug=item.slug %}" class="btn btn-danger">Delete</a>
   		</div>
 	</div>
+{% empty %}
+<h1 class="text-danger">Sorry, there were no results for what you are searching for...</h1>
 {% endfor %}
 </div>
 <div class="pagination">
     <span class="step-links">
         {% if list.has_previous %}
-            <a href="?page={{ list.previous_page_number }}">previous</a>
+            <a href="?page={{ list.previous_page_number }}&q={{request.GET.q}}">previous</a>
         {% endif %}
 
         <span class="current">
@@ -50,7 +57,7 @@ List
         </span>
 
         {% if list.has_next %}
-            <a href="?page={{ list.next_page_number }}">next</a>
+            <a href="?page={{ list.next_page_number }}&q={{request.GET.q}}">next</a>
         {% endif %}
     </span>
 </div>

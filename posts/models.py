@@ -22,7 +22,7 @@ class Post(models.Model):
 		return reverse("posts:detail", kwargs={'post_slug':self.slug})
 
 	class Meta:
-		ordering = ['-title']
+		ordering = ['title']
 
 def create_slug(instance, new_slug=None):
 	slug_value = slugify(instance.title)
