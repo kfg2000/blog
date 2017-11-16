@@ -20,8 +20,18 @@ List
 			<img class="card-img-top" src="{{item.img.url}}" alt="Card image cap">
 		{% endif %}	
   		<div class="card-body">
-    		<h4 class="card-title">{{item.title}} <small>{{item.updated}}</small></h4>
+    		<h4 class="card-title">
+          {{item.title}} 
+          <small>{{item.publish_date}}</small>
+          {% if item.draft %}
+            <span class="text-danger"> Draft </span>
+          {% endif %}
+          {% if item.publish_date > today %}
+            <span class="text-success">Future Post</span>
+          {% endif %}
+        </h4>
    			<p class="card-text">{{item.content}}</p>
+        <p class="card-text">Created by: {{item.author.get_full_name}}</p>
    			<a href="{% url 'posts:detail' post_slug=item.slug %}" class="btn btn-info">Detail</a>
    			<a href="{% url 'posts:update' post_slug=item.slug %}" class="btn btn-warning">Update</a>
     		<a href="{% url 'posts:delete' post_slug=item.slug %}" class="btn btn-danger">Delete</a>

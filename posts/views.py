@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from urllib.parse import quote 
 from django.http import Http404
+from django.utils import timezone 
 
 def post_home(request):
     context = {
@@ -25,7 +26,12 @@ def fun(request):
     return render(request, 'fun.html', context)
 
 def post_list(request):
-    objects = Post.objects.all()
+    
+    today = timezone.now().date()
+
+    objects = Post.objects.filter(draft=False, publish_date__lte=today)
+    if request.user.is_staff:
+        objects = Post.objects.all()
 
     paginator = Paginator(objects, 3) # Show 3 objects per page
 
@@ -40,13 +46,17 @@ def post_list(request):
         objects = paginator.page(paginator.num_pages)
     
     context = {
-        "list": objects
+        "list": objects,
+        "today": today,
     }
     return render(request, 'list.html', context)
 
 def post_detail(request, post_slug):
     # way 1: item = Post.objects.get(id=1), way 2:
     item = get_object_or_404(Post, slug = post_slug)
+    if not request.user.is_staff and (item.draft or item.publish_date > timezone.now().date()):
+        raise Http404
+
     context = {
         'item': item,
     }
@@ -57,7 +67,9 @@ def post_create(request):
         raise Http404
     form = PostForm(request.POST or None, request.FILES or None)
     if form.is_valid():
-        form.save()
+        post = form.save(commit=False)
+        post.author = request.user
+        post.save()
         messages.success(request, "Awesome, you added a post :)")
         return redirect("posts:list")
     context = {
