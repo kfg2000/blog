@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post 
+from .models import Post, Like
 from .forms import PostForm
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from urllib.parse import quote 
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.utils import timezone 
 from django.db.models import Q
 
@@ -67,8 +67,19 @@ def post_detail(request, post_slug):
     if not request.user.is_staff and (item.draft or item.publish_date > timezone.now().date()):
         raise Http404
 
+    if request.user.is_authenticated():
+        if Like.objects.filter(post=item, user=request.user).exists():
+            liked = True
+        else:
+            liked = False
+
+
+    like_count = item.like_set.count()
+
     context = {
         'item': item,
+        'liked': liked,
+        'like_count': like_count,
     }
     return render(request, 'detail.html', context)
 
@@ -108,3 +119,21 @@ def post_delete(request, post_slug):
     Post.objects.get(slug=post_slug).delete()
     messages.warning(request, "You sure?")
     return redirect("posts:list")
+
+def like_button(request, post_id):
+    post_object = Post.objects.get(id=post_id)
+
+    like, created = Like.objects.get_or_create(user=request.user, post=post_object)
+
+    if created:
+        action = "like"
+    else:
+        like.delete()
+        action = "unlike"
+
+    like_count = post_object.like_set.count()
+    response = {
+        'action':action,
+        'like_count': like_count,
+    }
+    return JsonResponse(response, safe=False)

@@ -1,0 +1,24 @@
+{% load comments %}
+
+{% get_comment_list for item as comments %}
+
+{% for awesome in comments %}
+	<div class="alert alert-info" role='alert'><b>{{awesome.user_name}} said:</b> {{awesome.comment|linebreaks}}</div>
+{% endfor %}
+
+{% get_comment_form for item as form %}
+<form action="{% comment_form_target %}" method="POST">
+	{% csrf_token %}
+
+	<input type="hidden" name="name" value="{{request.user.user_name}}">
+	<input type="hidden" name="email" value="{{request.user.email}}">
+	<input type="text" name="comment" class="form-control input-lg">
+
+	{{form.content_type}}
+	{{form.object_pk}}
+	{{form.timestamp}}
+	{{form.security_hash}}
+	
+	<input type="hidden" name="next" value="{{item.get_absolute_url}}">
+	<input type="submit" value='Submit' class='btn btn-outline-info'>
+</form>

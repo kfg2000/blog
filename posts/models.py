@@ -40,3 +40,8 @@ def pre_save_post_function(sender, instance, *args, **kwargs):
 		instance.slug = create_slug(instance)
 
 pre_save.connect(pre_save_post_function, sender=Post)
+
+class Like(models.Model):
+	user = models.ForeignKey(User)
+	post = models.ForeignKey(Post)
+	timestamp = models.DateTimeField(auto_now_add=True)

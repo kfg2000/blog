@@ -27,4 +27,33 @@ Detail
 			<i class="fa fa-linkedin" aria-hidden="true"></i>
 		</a>
 	</ul>
+	<div class="btn btn-secondary" onclick="ajax_like()">
+		<span id="like_count">{{like_count}}</span>
+		<span ><i id="heart" class="fa fa-heart {% if liked %}text-danger{% endif %}" aria-hidden="true"></i></span>
+	</div>
+	{% include "comments.html" %}
+
+	<script>
+	function ajax_like()
+	{
+		$.ajax(
+			{
+				type:'GET',
+				url:'{% url "posts:like_button" post_id=item.id %}',
+				error:function(){
+					console.log("OMG WHAT DID YOU DO!")
+				},
+				success:function(data){
+					$("#like_count").text(data.like_count);
+					if(data.action==="like"){
+						$("#heart").addClass("text-danger");
+					}
+					else{
+						$("#heart").removeClass("text-danger");
+					}
+				},
+			});
+	}
+	</script>
+
 {% endblock content %}
