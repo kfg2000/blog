@@ -1,12 +1,63 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post, Like
-from .forms import PostForm
+from .forms import PostForm, UserSignup, UserLogin
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from urllib.parse import quote 
 from django.http import Http404, JsonResponse
 from django.utils import timezone 
 from django.db.models import Q
+from django.contrib.auth import authenticate, login, logout
+
+def usersignup(request):
+    context = {}
+    form = UserSignup()
+    context['form'] = form
+    
+    if request.method == 'POST':
+        form = UserSignup(request.POST)
+        if form.is_valid():
+            user = form.save()
+            x = user.username
+            y = user.password
+
+            user.set_password(y)
+            user.save()
+
+            auth = authenticate(username=x,password=y)
+            login(request, auth)
+
+            return redirect("posts:list")
+        
+        messages.warning(request, form.errors)
+        return redirect("posts:signup")
+    return render(request, 'signup.html', context)
+
+def userlogin(request):
+    context = {}
+    form = UserLogin()
+    context['form'] = form
+    
+    if request.method == 'POST':
+        form = UserLogin(request.POST)
+        if form.is_valid():
+            user_user = form.cleaned_data['username']
+            user_pass = form.cleaned_data['password']
+
+            auth = authenticate(username=user_user, password=user_pass)
+            if auth is not None:
+                login(request, auth)
+                return redirect("posts:list")
+            messages.warning(request, 'Incorrect user/pass...')
+            redirect("posts:login")
+        messages.warning(request, form.errors)
+        return redirect("posts:login")
+    return render(request, 'login.html', context)
+
+def userlogout(request):
+    logout(request)
+    return redirect("posts:list")
+
 
 def post_home(request):
     context = {
@@ -67,6 +118,7 @@ def post_detail(request, post_slug):
     if not request.user.is_staff and (item.draft or item.publish_date > timezone.now().date()):
         raise Http404
 
+    liked = False
     if request.user.is_authenticated():
         if Like.objects.filter(post=item, user=request.user).exists():
             liked = True
