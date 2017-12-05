@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'mnh4p#y*c41=vkl!k16e@x@jqpp+qu=ks73r)-ol-*bqi)i!v='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['165.227.172.83','127.0.0.1']
 
@@ -105,7 +105,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'django',
         'USER': 'django',
-        'PASSWORD': '7934cce51d36758ec5614b61a43980f1'
+        'PASSWORD': '7934cce51d36758ec5614b61a43980f1',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 

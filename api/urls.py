@@ -9,7 +9,7 @@ urlpatterns = [
 	url(r'^create/$', PostCreateAPIView.as_view(), name="create"),
 	url(r'^comments/$', CommentListView.as_view(), name="comment-list"),
 	url(r'^comments/create/$', CommentCreateView.as_view(), name="comment-create"),
-	url(r'^register$', UserCreateView.as_view(), name="register"),
-	url(r'^login$', UserLoginView.as_view(), name="login"),
+	url(r'^register/$', UserCreateView.as_view(), name="register"),
+	url(r'^login/$', UserLoginView.as_view(), name="login"),
 
 ]
